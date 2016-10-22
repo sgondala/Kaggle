@@ -1,17 +1,20 @@
 import json
 import NN
 import numpy as np
-import pandas as pd 
+import pandas as pd
 
 
 trainData = json.load(open("train.json", 'r'))
 cuisineMap = {}
+cuisineInverseMap = {}
 cuisineCount = 0
 ingredientMap = {}
 ingredientCount = 0
+
 for data in trainData:
     if data["cuisine"] not in cuisineMap:
         cuisineMap[data['cuisine']] = cuisineCount
+        cuisineInverseMap[cuisineCount] = cuisineMap[data['cuisine']]
         cuisineCount = cuisineCount + 1
 
     for ingredient in data["ingredients"]:
@@ -37,25 +40,16 @@ lastLayerLength = cuisineCount + 1
 
 nn = NN.neuralNetwork(3,firstLayerLength,lastLayerLength)
 
-for i in range(len(df)):
+for i in range(100):
     if i%100==0:
         print i
-    nn.forwardPropagation(np.matrix(makeInput(df['ingredients'][0])).getT())
-    #print "Forward done"
-    nn.backPropagation(np.matrix(makeOutput(df['cuisine'][0])).getT())
-    #print "Backward done"
+    nn.forwardPropagation(np.matrix(makeInput(df['ingredients'][i])).getT())
+    nn.backPropagation(np.matrix(makeOutput(df['cuisine'][i])).getT())
     nn.changeTheta()
 
+testdf = pd.read_json('test.json')
 
-
-"""
-a = np.matrix(np.zeros((6715,1)))
-b = np.matrix(np.zeros((1,6715)))
-c = a*b
-print c.shape
-"""
-
-
-# for i in range(6500):
-# 	for j in range(6500):
-# 		a = 1
+for i in range(len(testdf)):
+    resultVal = nn.forwardPropagation(np.matrix(makeInput(testdf['ingredients'][i])).getT())
+    indexOfMax = np.argmax(resultVal)
+    print testdf['id'][i], cuisineInverseMap[indexOfMax]

@@ -71,6 +71,7 @@ class neuralNetwork:
         
         updateVal = self.softmax(self.activationVals[self.numberOfLayers][1:,0])
         self.activationVals[self.numberOfLayers] = np.append(np.zeros((1,1)),updateVal,axis=0)
+        return updateVal
 
     #Ran forwardProp algo separately before
     def backPropagation(self, expectedResult):
@@ -97,17 +98,6 @@ class neuralNetwork:
 
 
 """        
-    def changeTheta(self):
-        for layer in range(1,self.numberOfLayers-1): #If 3 layers, we have to do only 1
-            for i in range(self.lengthOfFirstLayer):
-                for j in range(self.lengthOfFirstLayer):
-                    self.thetaVals[layer][i,j] = self.thetaVals[layer][i,j] - self.learningRate*self.activationVals[layer][j]*self.delVals[layer+1][i]
-        layer = self.numberOfLayers-1
-        for i in range(self.lengthOfLastLayer):
-            for j in range(self.lengthOfFirstLayer):
-                self.thetaVals[layer][i,j] = self.thetaVals[layer][i,j] - self.learningRate*self.activationVals[layer][j]*self.delVals[layer+1][i]
-
-
 a = neuralNetwork(3,4,3)
 features = np.matrix([1,1,1]).getT()
 a.forwardPropagation(features)
