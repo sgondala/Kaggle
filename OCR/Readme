@@ -1,0 +1,5 @@
+Comparing several algos
+
+Decision tree - 63%
+Random Forest(n=200) - 97%
+KNN - 96.5

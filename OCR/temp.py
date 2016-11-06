@@ -1,4 +1,4 @@
-a = file('RandomForestSubmission.csv','r')
+a = file('KNN.csv','r')
 for line in a:
 	s = ""
 	for item in line:
